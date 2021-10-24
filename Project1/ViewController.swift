@@ -17,6 +17,10 @@ class ViewController: UITableViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(recommendMe))
         
+        performSelector(inBackground: #selector(loadImageNames), with: nil)
+    }
+    
+    @objc func loadImageNames() {
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
         let items = try! fm.contentsOfDirectory(atPath: path)
@@ -28,6 +32,10 @@ class ViewController: UITableViewController {
         }
         
         pictures.sort()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
